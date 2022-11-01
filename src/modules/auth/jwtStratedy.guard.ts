@@ -10,7 +10,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { Observable } from "rxjs";
 
 export const IS_PUBLIC = "IS_PUBLIC";
-export const isPublicController = () => SetMetadata(IS_PUBLIC, true);
+export const isPublicResolver = () => SetMetadata(IS_PUBLIC, true);
 
 export const CurrentUser = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {

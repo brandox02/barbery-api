@@ -1,31 +1,33 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { UsersModule } from "../users/users.module";
 import { AuthService } from "./auth.service";
-import { LocalStrategyProvider } from "./localStrategy.provider";
 import { JwtModule } from "@nestjs/jwt";
-import { AuthRsolver } from "./auth.resolver";
+import { AuthResolver } from "./auth.resolver";
 import { JwtStrategyProvider } from "./JwtStrategy.provider";
 import { JwtGraphqlStrategyGuard } from "./jwtStratedy.guard";
-import { LocalStrategyGuard } from "./localStrategy.guard";
-
-export const JWT_SECRET = "SECRET_ASD_12345";
+import { ConfigService } from "@nestjs/config";
 @Module({
   imports: [
-    UsersModule,
-    JwtModule.register({
-      secret: JWT_SECRET,
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const secret = configService.get("JWT_SECRET_TOKEN");
+        return {
+          secret,
+        };
+      },
     }),
+    forwardRef(() => UsersModule),
   ],
   providers: [
-    AuthRsolver,
+    AuthResolver,
     AuthService,
-    LocalStrategyProvider,
     JwtStrategyProvider,
-    // {
-    //   provide: "APP_GUARD",
-    //   useClass: LocalStrategyGuard,
-    // },
+    {
+      provide: "APP_GUARD",
+      useClass: JwtGraphqlStrategyGuard,
+    },
   ],
-  // exports: [],
+  exports: [AuthService],
 })
 export class AuthModule {}

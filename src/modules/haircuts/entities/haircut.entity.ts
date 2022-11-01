@@ -14,7 +14,7 @@ export class Haircut {
   @Field()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   @Field()
   name: string;
 

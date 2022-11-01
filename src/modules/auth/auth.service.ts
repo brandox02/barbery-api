@@ -5,8 +5,10 @@ import { JwtService } from "@nestjs/jwt";
 import { InjectDataSource } from "@nestjs/typeorm";
 import { DataSource } from "typeorm";
 import { ResourceExistsException } from "src/GqlExeptions/ResourceExistsException";
+import { UsersInput } from "../users/dto/input";
+import { omit } from "lodash";
 
-export type AuthenticatedUser = Omit<User, "password">;
+export type AuthenticatedUser = Omit<UsersInput, "password">;
 export type LoginOutput = { accessToken: string };
 export type JwtPayload = { username: string; sub: number };
 
@@ -15,7 +17,7 @@ export class AuthService {
   constructor(
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
-    @InjectDataSource() private readonly dataSource: DataSource
+    @InjectDataSource() private readonly dataSource: DataSource // @Inject(forwardRef(() => UsersService)) // private readonly userService: UsersService
   ) {}
 
   async validateUser(
@@ -24,13 +26,13 @@ export class AuthService {
   ): Promise<AuthenticatedUser | null> {
     const user = await this.userService.findOne({ username });
     if (user && user.password === password) {
-      const { password: _, ...result } = user;
-      return result;
+      const userPicked = omit(user, "password");
+      return userPicked;
     }
     return null;
   }
 
-  private getToken(user: AuthenticatedUser) {
+  getToken(user: AuthenticatedUser) {
     const payload: JwtPayload = { username: user.username, sub: user.id };
     const accessToken = this.jwtService.sign(payload);
     return {
@@ -43,7 +45,7 @@ export class AuthService {
     return token;
   }
 
-  async signin(userInput: User) {
+  async signin(userInput: UsersInput) {
     const { username, email, password } = userInput;
     const userRepo = this.dataSource.getRepository(User);
     const userFound = await userRepo
@@ -61,6 +63,7 @@ export class AuthService {
 
     const user = await userRepo.save(userRepo.create(userInput));
 
-    console.log(user);
+    const response = this.login(user);
+    return response;
   }
 }

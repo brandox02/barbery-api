@@ -1,33 +1,35 @@
-import { Controller, Req, UseGuards } from "@nestjs/common";
+import { Controller, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { Args, Query } from "@nestjs/graphql";
-import { Request } from "src/common/types";
-import { UsersInput } from "../users/dto/input";
+
+import { UsersInput } from "../users/dto/input/UsersInput.dto";
 import { AuthService } from "./auth.service";
-import { LocalStrategyGuard } from "./localStrategy.guard";
-
+import { LoginOutput } from "./dto/output";
+import { isPublicResolver, JwtGraphqlStrategyGuard } from "./jwtStratedy.guard";
 @Controller("auth")
-export class AuthRsolver {
-  constructor(private readonly authService: AuthService) {}
+export class AuthResolver {
+  constructor(
+    private readonly authService: AuthService // private readonly userService: UsersService
+  ) {}
 
-  // @UseGuards(LocalStrategyGuard)
-  // @Post("login")
-  // login(@Req() req: Request) {
-  //   const response = this.authService.login(req.user);
+  @isPublicResolver()
+  @Query(() => LoginOutput)
+  async login(
+    @Args("username") username: string,
+    @Args("password") password: string
+  ) {
+    const user = await this.authService.validateUser(username, password);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
 
-  //   return response;
-  // }
-
-  @Query(() => String)
-  @UseGuards(LocalStrategyGuard)
-  login(@Req() req: Request) {
-    const response = this.authService.login(req.user);
+    const response = this.authService.login(user);
 
     return response;
   }
 
-  @Query(() => String)
-  signin(@Args("user") userInput: UsersInput) {
-    console.log({ userInput });
-    return "";
+  @Query(() => LoginOutput)
+  @UseGuards(JwtGraphqlStrategyGuard)
+  async signin(@Args("user") userInput: UsersInput) {
+    return this.authService.signin(userInput);
   }
 }

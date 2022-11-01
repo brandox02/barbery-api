@@ -1,7 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { Args } from "@nestjs/graphql";
 import { InjectRepository } from "@nestjs/typeorm";
+import { pick } from "lodash";
+import { uniqueConstraint } from "src/common/uniqueContraint";
 import { NotFoundException } from "src/GqlExeptions/NotFoundExeption";
+import { UniqueConstraintException } from "src/GqlExeptions/UniqueConstraintException";
 import { UtilsProvider } from "src/utils";
 import { FindOptionsOrder, Repository } from "typeorm";
 import { FileUploadService } from "../file-upload/file-upload.provider";
@@ -50,10 +53,13 @@ export class HaircutsService {
   }
 
   async save(@Args("haircut") haircut: HaircutInput) {
+    await uniqueConstraint<Haircut>(this.repo, haircut, ["name"]);
+
     const payload = await this.fileUploadService.uploadImage<Haircut>(
       this.repo,
       haircut
     );
+
     const haircutSaved = await this.repo.save(this.repo.create(payload));
     if (!haircutSaved) throw new Error("Haircut could not saved correctly");
 

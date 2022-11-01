@@ -1,9 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { Args } from "@nestjs/graphql";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { pick } from "lodash";
+import { uniqueConstraint } from "src/common/uniqueContraint";
 import { NotFoundException } from "src/GqlExeptions/NotFoundExeption";
 import { UtilsProvider } from "src/utils";
 import { FindOptionsOrder, Repository } from "typeorm";
+import { AuthService, LoginOutput } from "../auth/auth.service";
 import { FileUploadService } from "../file-upload/file-upload.provider";
 import { UsersInput, UsersWhere } from "./dto/input";
 import { User } from "./entities/users.entity";
@@ -13,7 +15,9 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private readonly repo: Repository<User>,
     private readonly fileUploadService: FileUploadService,
-    private readonly utils: UtilsProvider
+    private readonly utils: UtilsProvider,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService
   ) {}
 
   async findAll(
@@ -47,14 +51,14 @@ export class UsersService {
     return null;
   }
 
-  async save(@Args("user") user: UsersInput) {
+  async save(user: UsersInput): Promise<LoginOutput> {
+    await uniqueConstraint(this.repo, user, ["username", "email"]);
     const payload = await this.fileUploadService.uploadImage<User>(
       this.repo,
       user
     );
     const userSaved = await this.repo.save(this.repo.create(payload));
     if (!userSaved) throw new Error("User could not saved correctly");
-
-    return this.repo.findOne({ where: { id: userSaved.id } });
+    return this.authService.getToken(userSaved);
   }
 }
