@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
-import { UtilsProvider } from "src/utils";
+import { UtilsProvider } from "src/common/UtilsProvider";
 import { DataSource, EntityManager, In, Repository } from "typeorm";
 import { WorkScheduleInput } from "./dto/input";
 import { WorkSchedule2 } from "./entities/work-schedule.entity";

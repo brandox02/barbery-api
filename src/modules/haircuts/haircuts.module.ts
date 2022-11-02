@@ -4,7 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Haircut } from "./entities/haircut.entity";
 import { FileUploadModule } from "../file-upload/file-upload.module";
 import HaircutResolver from "./haircuts.resolver";
-import { UtilsProvider } from "src/utils";
+import { UtilsProvider } from "src/common/UtilsProvider";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Haircut]), FileUploadModule],

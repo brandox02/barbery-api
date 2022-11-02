@@ -1,9 +1,8 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { pick } from "lodash";
 import { uniqueConstraint } from "src/common/uniqueContraint";
 import { NotFoundException } from "src/GqlExeptions/NotFoundExeption";
-import { UtilsProvider } from "src/utils";
+import { UtilsProvider } from "src/common/UtilsProvider";
 import { FindOptionsOrder, Repository } from "typeorm";
 import { AuthService, LoginOutput } from "../auth/auth.service";
 import { FileUploadService } from "../file-upload/file-upload.provider";

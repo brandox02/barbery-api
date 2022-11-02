@@ -1,4 +1,4 @@
-export const privacyPolicyHtmlString: string = `<!DOCTYPE html>
+export const privacyPolicyHtmlString = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Privacy Policy for Stranger Thing Wiki - PrivacyPolicies.com</title>

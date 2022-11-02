@@ -10,6 +10,9 @@ import { CloudinaryModule } from "./modules/cloudinary/cloudinary.module";
 import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { WorkScheduleModule } from "./modules/work-schedule/work-schedule.module";
+import { ScheduleModule } from "./modules/schedule/schedule.module";
+import { AppController } from "./app.controller";
+
 @Module({
   imports: [
     HaircutsModule,
@@ -28,6 +31,8 @@ import { WorkScheduleModule } from "./modules/work-schedule/work-schedule.module
     UsersModule,
     AuthModule,
     WorkScheduleModule,
+    ScheduleModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
