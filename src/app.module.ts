@@ -9,6 +9,7 @@ import { FileUploadModule } from "./modules/file-upload/file-upload.module";
 import { CloudinaryModule } from "./modules/cloudinary/cloudinary.module";
 import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
+import { WorkScheduleModule } from "./modules/work-schedule/work-schedule.module";
 @Module({
   imports: [
     HaircutsModule,
@@ -26,6 +27,7 @@ import { AuthModule } from "./modules/auth/auth.module";
     CloudinaryModule,
     UsersModule,
     AuthModule,
+    WorkScheduleModule,
   ],
 })
 export class AppModule {}

@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Haircut } from "src/modules/haircuts/entities/haircut.entity";
 
 @Module({
   imports: [
@@ -18,6 +17,7 @@ import { Haircut } from "src/modules/haircuts/entities/haircut.entity";
           port: +configService.get("DB_PORT"),
           synchronize: !isProd,
           autoLoadEntities: true,
+          entities: ["dist/**/**.entity{.ts,.js}"],
         };
       },
     }),
