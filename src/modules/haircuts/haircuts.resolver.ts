@@ -1,5 +1,5 @@
 import { Mutation, Query, Resolver, Args } from "@nestjs/graphql";
-import { HaircutInput } from "./dto/inputs";
+import { HaircutInput } from "./dto/index.input";
 
 import { Haircut } from "./entities/haircut.entity";
 import { HaircutsService } from "./haircuts.service";

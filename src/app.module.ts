@@ -4,7 +4,7 @@ import { ConfigModule } from "@nestjs/config";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { HaircutsModule } from "./modules/haircuts/haircuts.module";
-import { DatabaseModule } from "./database/database.module";
+import { DatabaseModule } from "./modules/database/database.module";
 import { FileUploadModule } from "./modules/file-upload/file-upload.module";
 import { CloudinaryModule } from "./modules/cloudinary/cloudinary.module";
 import { UsersModule } from "./modules/users/users.module";
@@ -15,18 +15,18 @@ import { AppController } from "./app.controller";
 
 @Module({
   imports: [
-    HaircutsModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       plugins: [ApolloServerPluginLandingPageLocalDefault],
       autoSchemaFile: true,
       playground: false,
     }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     DatabaseModule,
     FileUploadModule,
+    HaircutsModule,
     CloudinaryModule,
     UsersModule,
     AuthModule,
@@ -35,4 +35,8 @@ import { AppController } from "./app.controller";
   ],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    process.env.TZ = "America/Santo_Domingo";
+  }
+}

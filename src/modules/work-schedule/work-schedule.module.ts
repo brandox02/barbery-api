@@ -3,10 +3,10 @@ import { WorkScheduleService } from "./work-schedule.service";
 import { WorkScheduleResolver } from "./work-schedule.resolver";
 import { UtilsProvider } from "src/common/UtilsProvider";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { WorkSchedule2 } from "./entities/work-schedule.entity";
+import { WorkSchedule } from "./entities/work-schedule.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([WorkSchedule2])],
+  imports: [TypeOrmModule.forFeature([WorkSchedule])],
   providers: [WorkScheduleResolver, WorkScheduleService, UtilsProvider],
 })
 export class WorkScheduleModule {}

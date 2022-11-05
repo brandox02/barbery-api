@@ -3,7 +3,7 @@ import { UsersService } from "./users.service";
 import { Args } from "@nestjs/graphql";
 import { User } from "./entities/users.entity";
 import { FileUploadService } from "../file-upload/file-upload.provider";
-import { UsersInput } from "./dto/input/UsersInput.dto";
+import { UsersInput } from "./dto/input/UsersInput.input";
 import { InjectDataSource } from "@nestjs/typeorm";
 import { DataSource } from "typeorm";
 import { LoginOutput } from "../auth/dto/output";

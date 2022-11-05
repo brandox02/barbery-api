@@ -1,2 +1,2 @@
-export { UsersInput } from "./UsersInput.dto";
-export { UsersWhere } from "./UsersInputWhere.dto";
+export { UsersInput } from "./UsersInput.input";
+export { UsersWhere } from "./UsersInputWhere.input";

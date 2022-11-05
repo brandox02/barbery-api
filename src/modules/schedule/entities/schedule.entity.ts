@@ -14,36 +14,29 @@ import {
 @Entity({ name: "schedules", schema: "public" })
 @ObjectType()
 export class Schedule {
-  @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
   @Column({ name: "user_id" })
   userId: number;
 
-  @Field()
   @ManyToOne((_) => User)
   @JoinColumn({ name: "user_id" })
   user: User;
 
-  @Field()
   @Column({ name: "haircut_id" })
   haircutId: number;
 
-  @Field()
   @ManyToOne((_) => Haircut)
   @JoinColumn({ name: "haircut_id" })
   haircut: Haircut;
 
-  @Field()
   @Column({
     name: "schedule_date",
     type: "timestamp",
   })
   scheduleDate: Date;
 
-  @Field()
   @Column({ default: false, nullable: true })
   cancelled: boolean;
 

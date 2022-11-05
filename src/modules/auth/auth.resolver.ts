@@ -1,10 +1,12 @@
-import { Controller, UnauthorizedException, UseGuards } from "@nestjs/common";
-import { Args, Query } from "@nestjs/graphql";
+import { Controller, UnauthorizedException } from "@nestjs/common";
+import { Args, Context, Mutation, Query } from "@nestjs/graphql";
 
-import { UsersInput } from "../users/dto/input/UsersInput.dto";
-import { AuthService } from "./auth.service";
-import { LoginOutput } from "./dto/output";
-import { isPublicResolver, JwtGraphqlStrategyGuard } from "./jwtStratedy.guard";
+import { UsersInput } from "../users/dto/input/UsersInput.input";
+import { User } from "../users/entities/users.entity";
+import { AuthService, AuthenticatedUser } from "./auth.service";
+import { GetUserInfo, LoginOutput } from "./dto/output";
+import { isPublicResolver } from "./jwtStratedy.guard";
+
 @Controller("auth")
 export class AuthResolver {
   constructor(
@@ -12,7 +14,7 @@ export class AuthResolver {
   ) {}
 
   @isPublicResolver()
-  @Query(() => LoginOutput)
+  @Mutation(() => LoginOutput)
   async login(
     @Args("username") username: string,
     @Args("password") password: string
@@ -27,9 +29,14 @@ export class AuthResolver {
     return response;
   }
 
-  @Query(() => LoginOutput)
-  @UseGuards(JwtGraphqlStrategyGuard)
+  @Mutation(() => LoginOutput)
+  @isPublicResolver()
   async signin(@Args("user") userInput: UsersInput) {
     return this.authService.signin(userInput);
+  }
+
+  @Query(() => GetUserInfo)
+  getUserInfo(@Context() context: any): GetUserInfo {
+    return context.req.user;
   }
 }

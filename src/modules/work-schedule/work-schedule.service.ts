@@ -2,21 +2,21 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { UtilsProvider } from "src/common/UtilsProvider";
 import { DataSource, EntityManager, In, Repository } from "typeorm";
-import { WorkScheduleInput } from "./dto/input";
-import { WorkSchedule2 } from "./entities/work-schedule.entity";
+import { WorkScheduleInput } from "./dto/index.input";
+import { WorkSchedule } from "./entities/work-schedule.entity";
 
 @Injectable()
 export class WorkScheduleService {
   constructor(
-    @InjectRepository(WorkSchedule2)
-    private readonly repo: Repository<WorkSchedule2>,
+    @InjectRepository(WorkSchedule)
+    private readonly repo: Repository<WorkSchedule>,
     private readonly utilsProvider: UtilsProvider,
     @InjectDataSource() private readonly dataSource: DataSource
   ) {}
 
-  async findAll(where: WorkScheduleInput): Promise<WorkSchedule2[]> {
+  async findAll(where: WorkScheduleInput): Promise<WorkSchedule[]> {
     const workScheduleDays = await this.repo.find({
-      where: this.utilsProvider.removeNullFields<WorkSchedule2>(where),
+      where: this.utilsProvider.removeNullFields<WorkSchedule>(where),
       relations: {
         workIntervals: true,
       },
@@ -25,9 +25,9 @@ export class WorkScheduleService {
     return workScheduleDays;
   }
 
-  async findOne(where: WorkScheduleInput): Promise<WorkSchedule2> {
+  async findOne(where: WorkScheduleInput): Promise<WorkSchedule> {
     const workScheduleDay = await this.repo.findOne({
-      where: this.utilsProvider.removeNullFields<WorkSchedule2>(where),
+      where: this.utilsProvider.removeNullFields<WorkSchedule>(where),
       relations: {
         workIntervals: true,
       },
@@ -35,9 +35,9 @@ export class WorkScheduleService {
     return workScheduleDay;
   }
 
-  async saveOne(workScheduleDay: WorkScheduleInput): Promise<WorkSchedule2> {
+  async saveOne(workScheduleDay: WorkScheduleInput): Promise<WorkSchedule> {
     return this.dataSource.transaction(async (txn: EntityManager) => {
-      const repo = txn.getRepository(WorkSchedule2);
+      const repo = txn.getRepository(WorkSchedule);
       const workScheduleDaySaved = await repo.save(
         repo.create(workScheduleDay)
       );
@@ -53,9 +53,9 @@ export class WorkScheduleService {
 
   async saveAll(
     workScheduleDays: WorkScheduleInput[]
-  ): Promise<WorkSchedule2[]> {
+  ): Promise<WorkSchedule[]> {
     return this.dataSource.transaction(async (txn) => {
-      const workScheduleDayRepo = txn.getRepository(WorkSchedule2);
+      const workScheduleDayRepo = txn.getRepository(WorkSchedule);
 
       await workScheduleDayRepo.save(
         workScheduleDayRepo.create(workScheduleDays)

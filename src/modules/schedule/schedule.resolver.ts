@@ -1,7 +1,7 @@
 import { Mutation, Query, Resolver, Args } from "@nestjs/graphql";
 import { Schedule } from "./entities/schedule.entity";
-import { GetAvalibleIntervals, SchedulesPerDay } from "./dto/output";
-import { ScheduleInput, ScheduleWhereInput } from "./dto/input";
+import { GetAvalibleIntervals, SchedulesPerDay } from "./dto/index.output";
+import { ScheduleInput, ScheduleWhereInput } from "./dto/index.input";
 import { ScheduleService } from "./schedule.service";
 
 @Resolver()
@@ -20,9 +20,7 @@ export class ScheduleResolver {
   }
 
   @Query(() => [SchedulesPerDay])
-  async schedulesPerDay(
-    @Args("date", { nullable: true }) date: Date
-  ): Promise<SchedulesPerDay[]> {
+  async schedulesPerDay(@Args("date") date: Date): Promise<SchedulesPerDay[]> {
     return this.service.schedulesPerDay(date);
   }
 

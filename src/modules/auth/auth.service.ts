@@ -10,7 +10,6 @@ import { omit } from "lodash";
 
 export type AuthenticatedUser = Omit<UsersInput, "password">;
 export type LoginOutput = { accessToken: string };
-export type JwtPayload = { username: string; sub: number };
 
 @Injectable()
 export class AuthService {
@@ -33,8 +32,7 @@ export class AuthService {
   }
 
   getToken(user: AuthenticatedUser) {
-    const payload: JwtPayload = { username: user.username, sub: user.id };
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(JSON.stringify(user));
     return {
       accessToken,
     };
@@ -62,8 +60,8 @@ export class AuthService {
     }
 
     const user = await userRepo.save(userRepo.create(userInput));
-
-    const response = this.login(user);
+    console.log({ user });
+    const response = this.getToken(user);
     return response;
   }
 }

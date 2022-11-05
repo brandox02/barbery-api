@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { ObjectType } from "@nestjs/graphql";
 import {
   Entity,
   Column,
@@ -11,27 +11,21 @@ import {
 @Entity({ name: "haircuts", schema: "public" })
 export class Haircut {
   @PrimaryGeneratedColumn()
-  @Field()
   id: number;
 
   @Column({ unique: true })
-  @Field()
   name: string;
 
   @Column({ nullable: true, name: "image_url" })
-  @Field({ nullable: true })
   imageUrl?: string;
 
   @Column({ nullable: true, name: "image_id" })
-  @Field({ nullable: true })
   imageId?: string;
 
   @Column({ type: "float" })
-  @Field()
   price: number;
 
   @Column({ type: "time" })
-  @Field()
   duration: string;
 
   @Column({ default: true })

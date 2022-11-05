@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { ObjectType } from "@nestjs/graphql";
 import {
   Entity,
   Column,
@@ -8,35 +8,30 @@ import {
   JoinColumn,
   ManyToOne,
 } from "typeorm";
-import { WorkSchedule2 } from "./work-schedule.entity";
+import { WorkSchedule } from "./work-schedule.entity";
 
 @ObjectType()
 @Entity({ name: "work_hour_intervals", schema: "public" })
 export class WorkInterval {
   @PrimaryGeneratedColumn()
-  @Field()
   id: number;
 
   @Column({ name: "work_schedule_day_id", nullable: true })
-  @Field()
   workScheduleDayId: number;
 
   @Column({ name: "description", nullable: true })
-  @Field({ nullable: true })
-  description: string;
+  description?: string;
 
-  @ManyToOne(() => WorkSchedule2, (w) => w.workIntervals)
+  @ManyToOne(() => WorkSchedule, (w) => w.workIntervals)
   @JoinColumn({
     name: "work_schedule_day_id",
   })
-  workScheduleDay: WorkSchedule2;
+  workScheduleDay: WorkSchedule;
 
   @Column({ type: "time" })
-  @Field()
   start: string;
 
   @Column({ type: "time" })
-  @Field()
   end: string;
 
   @CreateDateColumn({ name: "created_at" })

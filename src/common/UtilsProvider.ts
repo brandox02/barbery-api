@@ -3,6 +3,8 @@ import { DataSource, EntityManager } from "typeorm";
 import { InjectDataSource } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 import * as dayjs from "dayjs";
+import isBetween = require("dayjs/plugin/isBetween");
+dayjs.extend(isBetween);
 
 interface IParams {
   time: string;
@@ -96,7 +98,7 @@ export class UtilsProvider {
     return unixTime;
   }
 
-  isChoken({ duration, endTime, startTime, time }: IParams) {
+  isChoken = ({ duration, endTime, startTime, time }: IParams) => {
     const durationInMinutes = dayjs(this.timeToUnix(duration)).get("minutes");
     const durationInHours = dayjs(this.timeToUnix(duration)).get("hours");
 
@@ -133,7 +135,7 @@ export class UtilsProvider {
       }
     }
     return false;
-  }
+  };
 
   delay(): Promise<void> {
     return new Promise((resolve) => {

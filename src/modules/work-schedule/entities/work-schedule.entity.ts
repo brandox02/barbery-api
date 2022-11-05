@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { ObjectType } from "@nestjs/graphql";
 import {
   Entity,
   Column,
@@ -6,31 +6,24 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  ManyToOne,
-  JoinColumn,
 } from "typeorm";
 import { WorkInterval } from "./work-interval.entity";
 
 @ObjectType()
 @Entity({ name: "work_schedule_days", schema: "public" })
-export class WorkSchedule2 {
+export class WorkSchedule {
   @PrimaryGeneratedColumn()
-  @Field()
   id: number;
 
   @Column()
-  @Field()
   day: string;
 
   @Column({ type: "time" })
-  @Field()
   start: string;
 
   @Column({ type: "time" })
-  @Field()
   end: string;
 
-  @Field(() => [WorkInterval])
   @OneToMany((_) => WorkInterval, (n) => n.workScheduleDay, {
     cascade: true,
   })

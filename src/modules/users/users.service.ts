@@ -6,7 +6,7 @@ import { UtilsProvider } from "src/common/UtilsProvider";
 import { FindOptionsOrder, Repository } from "typeorm";
 import { AuthService, LoginOutput } from "../auth/auth.service";
 import { FileUploadService } from "../file-upload/file-upload.provider";
-import { UsersInput, UsersWhere } from "./dto/input";
+import { UsersInput, UsersWhere } from "./dto/input/";
 import { User } from "./entities/users.entity";
 
 @Injectable()

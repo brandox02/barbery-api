@@ -1,14 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { Args } from "@nestjs/graphql";
 import { InjectRepository } from "@nestjs/typeorm";
-import { pick } from "lodash";
 import { uniqueConstraint } from "src/common/uniqueContraint";
 import { NotFoundException } from "src/GqlExeptions/NotFoundExeption";
-import { UniqueConstraintException } from "src/GqlExeptions/UniqueConstraintException";
 import { UtilsProvider } from "src/common/UtilsProvider";
 import { FindOptionsOrder, Repository } from "typeorm";
 import { FileUploadService } from "../file-upload/file-upload.provider";
-import { HaircutInput } from "./dto/inputs";
+import { HaircutInput } from "./dto/index.input";
 import { Haircut } from "./entities/haircut.entity";
 
 @Injectable()

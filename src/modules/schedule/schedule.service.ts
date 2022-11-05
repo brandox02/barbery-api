@@ -3,8 +3,8 @@ import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import * as dayjs from "dayjs";
 import { UtilsProvider } from "src/common/UtilsProvider";
 import { DataSource, Repository } from "typeorm";
-import { ScheduleInput, ScheduleWhereInput } from "./dto/input";
-import { GetAvalibleIntervals, SchedulesPerDay } from "./dto/output";
+import { ScheduleInput, ScheduleWhereInput } from "./dto/index.input";
+import { GetAvalibleIntervals, SchedulesPerDay } from "./dto/index.output";
 import { Schedule } from "./entities/schedule.entity";
 
 @Injectable()
@@ -51,9 +51,6 @@ export class ScheduleService {
     } else if (where.dates) {
       where.dates.forEach((date) => {
         this.utilsProvider.printDate(date);
-        console.log(
-          "============================================================"
-        );
       });
       customWhere.push({
         query: "CAST(schedule.schedule_date AS Date) IN(:...dates)",
@@ -121,10 +118,11 @@ export class ScheduleService {
       return arr;
     };
 
+    const { isChoken } = this.utilsProvider;
     const response: GetAvalibleIntervals[] = generateIntervals(duration)
       .filter(({ start }) => {
         const some = busyDates.some((schedule) =>
-          this.utilsProvider.isChoken({
+          isChoken({
             duration,
             time: start.format("HH:mm:ss"),
             endTime: schedule.end,
@@ -141,6 +139,7 @@ export class ScheduleService {
 
   async schedulesPerDay(date: Date): Promise<SchedulesPerDay[]> {
     type IWorkIntervals = { start: string; end: string; type: string }[];
+    const { isChoken } = this.utilsProvider;
     function buildNonWorkIntervals(workIntervals: IWorkIntervals) {
       const areContinues = (arg0: string, arg1: string) => {
         const num0 = parseInt(arg0.substring(0, 2));
@@ -159,7 +158,7 @@ export class ScheduleService {
         .filter((x) =>
           workIntervals.every(
             (y: any) =>
-              !this.utilsProvider.isChoken({
+              !isChoken({
                 time: x,
                 duration: "00:00:00",
                 startTime: y.start,
